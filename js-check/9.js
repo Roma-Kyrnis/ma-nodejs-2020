@@ -1,8 +1,8 @@
 function setTime(milisecond) {
-    let promise = new Promise((resolved, reject) => {
+    let promise = new Promise((resolve, reject) => {
 
         setTimeout(() => {
-            resolved("resolved");
+            resolve("resolved");
         }, milisecond);
 
     });
