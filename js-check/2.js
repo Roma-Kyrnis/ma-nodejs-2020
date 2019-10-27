@@ -96,7 +96,7 @@ function check() {
                             console.log("Type is incorrect.");
                         }
 
-                        if((user.phoneNumbers[i].number).match(/^\(\d\d\d\)\s\d\d\d-\d\d\d\d$/).join('')){
+                        if((user.phoneNumbers[i].number).match(/^\(\d{3}\)\s\d{3}-\d{4}$/).join('')){
                             console.log("Number is correct.");
                         } else {
                             console.log("Number is incorrect.");
