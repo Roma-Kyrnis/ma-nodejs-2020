@@ -20,11 +20,6 @@ const user = {
      
 };
 
-// for(let key in user.address) {
-// console.log(user.address[key] === "string");
-// console.log(user.address[key]);
-// }
-
 function check() {
     for(let key in user) {
             
@@ -98,9 +93,7 @@ function check() {
 
                         for(let key1 in user.phoneNumbers){
 
-                            //console.log(user.phoneNumbers[key1]);
-
-                            //console.log(typeof(Object.keys(user.phoneNumbers[key1]['type']))); //.map(function (key) { return user.phoneNumbers[key1].type;})
+                            
                             
                             for(let key2 in Object.keys(user.phoneNumbers[key1]['type'])) {
 
@@ -110,14 +103,6 @@ function check() {
                                 }
                             }
                         }
-                    
-                    
-
-                    // console.log(user.phoneNumbers.includes({type: 'MOBILE'} || {type: 'LINE'} || {type: 'VOIP'}));
-                       
-                    // var targ=phone_number_to_validate.replace(/[^\d]/g,'');
-                    // if(targ && targ.length===10) {
-                    // }
                 }
 
                 break;
@@ -127,17 +112,3 @@ function check() {
 
 
 check();
-
-
-
-
-// if(key === "type" && (user.phoneNumbers[key] === "NUMBER" || user.phoneNumbers[key] === "LINE" || user.phoneNumbers[key] === "VOIP")) {
-
-//     console.log(key + "t is correct.");
-// }
-   
-
-// if(key === "number" && typeof(parseInt(user.phoneNumbers[key])) === "number") {
-    
-//     console.log(key + "n is correct.");
-// }
