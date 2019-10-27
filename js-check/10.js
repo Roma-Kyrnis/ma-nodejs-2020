@@ -17,7 +17,12 @@ class Storage {
         console.log(this.keys);
 
         let promise = new Promise( (resolve, reject) => {
-            delete this.keys[{beginningOfKey}];
+            
+            for(let i = 0; i < this.keys.length; i++) {
+                if(this.keys[i].key === beginningOfKey) {
+                    delete this.keys[i];
+                }
+            }
             console.log(this.keys);
 
             resolve("resolved");
