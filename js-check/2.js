@@ -89,26 +89,24 @@ function check() {
            
                 if(typeof user[key] === "object" && user[key] !== 0 && user[key] !== '')  {
                         
-                    let key = Object.keys(user.phoneNumbers);
-
-                        for(let key1 in user.phoneNumbers){
-
-                            
-                            
-                            for(let key2 in Object.keys(user.phoneNumbers[key1]['type'])) {
-
-                                for(let key3 in user.phoneNumbers[key1]['type'][key2]) {
-                                    
-                                    console.log(user.phoneNumbers[key1]['type'][key2][key3]);
-                                }
-                            }
+                    for(let i = 0; i < user.phoneNumbers.length; i++) {
+                        if(user.phoneNumbers[i].type === "MOBILE" || user.phoneNumbers[i].type === "LINE" || user.phoneNumbers[i].type === "VOIP") {
+                            console.log("Type is correct.");
+                        } else {
+                            console.log("Type is incorrect.");
                         }
+
+                        if((user.phoneNumbers[i].number).match(/^\(\d\d\d\)\s\d\d\d-\d\d\d\d$/).join('')){
+                            console.log("Number is correct.");
+                        } else {
+                            console.log("Number is incorrect.");
+                        }
+                    }
                 }
 
                 break;
         }        
     }
 }
-
 
 check();
