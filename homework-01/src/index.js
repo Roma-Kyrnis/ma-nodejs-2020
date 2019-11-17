@@ -1,15 +1,15 @@
-// const http      = require('http'),
-//       nanoid    = require('nanoid'),
+const http = require('http');
+const nanoid = require('nanoid');
 
-//       hostname  = '127.0.0.1',
-//       port      = 3000,
+const hostname = '127.0.0.1';
+const port = 3000;
 
-//       server    = http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end(nanoid());
+});
 
-//                     res.statusCode  = 200;
-//                     res.setHeader('Content-Type', 'text/plain');
-//                     res.end(nanoid());
-
-//                   });
-
-// server.listen(port, hostname, () => console.log(`Server is running at http://${hostname}:${port}/`));
+server.listen(port, hostname, () =>
+  console.log(`Server is running at http://${hostname}:${port}/`),
+);
