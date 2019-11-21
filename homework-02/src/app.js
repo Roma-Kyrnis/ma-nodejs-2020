@@ -1,8 +1,8 @@
-const { sum, earth, task3 } = require('./task/index.js');
+const { task1: sum, task2: earth, task3 } = require('./tasks');
 
 async function boot() {
   console.log(sum());
-  await task3;
+  console.log(await task3);
   (() => {
     earth.addDiameterAndCalculateVolume(10);
     earth.printedNameAndVolume();

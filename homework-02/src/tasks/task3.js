@@ -5,4 +5,4 @@ function setTime(timer = 1000, text = 'resolved') {
     }, timer);
   });
 }
-module.exports = setTime(3000, 'Some text.').then((result) => console.log(result));
+module.exports = setTime(3000, 'Some text.');
