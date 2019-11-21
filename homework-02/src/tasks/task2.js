@@ -1,6 +1,6 @@
 class Earth {
-  constructor(diameter) {
-    this.name = 'Earth';
+  constructor(name, diameter) {
+    this.name = name;
     this.diameter = diameter;
   }
 
@@ -12,7 +12,7 @@ class Earth {
     console.log(`Planet ${this.name} have a volume ${this.volume}`);
   }
 }
-const earth = new Earth(10);
+const earth = new Earth('Earth', 10);
 earth.calculateVolume();
 
 module.exports = earth;
