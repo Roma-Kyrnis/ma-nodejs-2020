@@ -17,5 +17,6 @@ class Earth {
   }
 }
 const earth = new Earth();
+earth.addDiameterAndCalculateVolume(10);
 
 module.exports = earth;
