@@ -1,22 +1,18 @@
 class Earth {
-  constructor() {
+  constructor(diameter) {
     this.name = 'Earth';
-  }
-
-  addDiameterAndCalculateVolume(diameter) {
     this.diameter = diameter;
-    this.calculateVolume(diameter);
   }
 
-  calculateVolume(diameter) {
-    this.volume = ((4 / 3) * 3.14 * diameter ** 3).toFixed(2);
+  calculateVolume() {
+    this.volume = ((4 / 3) * 3.14 * this.diameter ** 3).toFixed(2);
   }
 
   printedNameAndVolume() {
     console.log(`Planet ${this.name} have a volume ${this.volume}`);
   }
 }
-const earth = new Earth();
-earth.addDiameterAndCalculateVolume(10);
+const earth = new Earth(10);
+earth.calculateVolume();
 
 module.exports = earth;
