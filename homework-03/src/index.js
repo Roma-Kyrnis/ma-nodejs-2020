@@ -8,7 +8,6 @@ function isPrime(num) {
   return num > 1;
 }
 setInterval(() => {
-  console.log(i);
   if (isPrime(i)) {
     result = i;
   }
