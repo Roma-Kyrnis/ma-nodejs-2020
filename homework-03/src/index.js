@@ -8,12 +8,12 @@ function isPrime(num) {
   return num > 1;
 }
 setInterval(() => {
+  console.log(i);
   if (isPrime(i)) {
     result = i;
   }
   i += 1;
-}, 100);
-
+}, 0);
 setInterval(() => {
-  console.log(result);
+  console.log(`${Date.now()} current result is ${result} and i = ${i}`);
 }, 1000);
