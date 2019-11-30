@@ -1,4 +1,4 @@
-let result = 2;
+const result = [];
 let i = 0;
 function isPrime(num) {
   let under;
@@ -9,10 +9,12 @@ function isPrime(num) {
 }
 setInterval(() => {
   if (isPrime(i)) {
-    result = i;
+    result.push(i);
   }
   i += 1;
 }, 0);
 setInterval(() => {
-  console.log(`${Date.now()} current result is ${result}`);
+  console.log(
+    `${Date.now()} : --IN PROCESS-- Biggest prime number found: ${result[result.length - 1]}`,
+  );
 }, 1000);
