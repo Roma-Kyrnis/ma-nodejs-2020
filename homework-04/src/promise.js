@@ -1,49 +1,59 @@
-function throwDice(callback) {
+function throwDice() {
   return new Promise((resolve, reject) => {
     const result = Math.round(0 + Math.random() * 5);
-    if (result !== 0) resolve(result);
-    else {
-      const err = 'Lost dice';
-      reject(err);
-    }
-    callback();
+    if (result === 0) reject(new Error('Lost dice'));
+    else resolve(result);
+  });
+}
+function delay(callback, ms) {
+  return new Promise(() => {
+    setTimeout(() => {
+      callback();
+    }, ms);
   });
 }
 let one;
 let two;
 
-function dice() {
+async function dice() {
   console.log(`Data is ${Date.now()} start`);
-  setTimeout(() => {
-    throwDice(
-      setTimeout(() => {
-        throwDice(
-          setTimeout(() => {
-            throwDice();
-          }, 1000),
-        );
-      }, 1300),
-    );
-  }, 700);
-  Promise.all()
-    .then(
-      (result) => {
-        one = result;
-        console.log(`Data is ${Date.now()} number one: ${one}`);
-      },
-      (error) => {
-        return new Error(console.error(`${error}`));
-      },
-    )
-    .then(
-      (result) => {
-        two = result;
-        console.log(`Data is ${Date.now()} number two: ${two}`);
-      },
-      (error) => {
-        return new Error(console.error(`${error}`));
-      },
-    )
-    .then(() => console.log(`Data is ${Date.now()} sum: ${one + two}`));
+  throwDice()
+    .then((res) => {
+      throwDice()
+        .then(() => {
+          one = res;
+          return res;
+        })
+        .catch((err) => {
+          return new Error(`In one: ${err}`);
+        });
+      delay(() => {
+        console.log(`Date is ${Date.now()}, number one ${res}`);
+      }, 700);
+    })
+    .then(() => {
+      throwDice().then((res) => {
+        throwDice()
+          .then(() => {
+            two = res;
+            return res;
+          })
+          .catch((err) => {
+            return new Error(`In two: ${err}`);
+          });
+        delay(() => {
+          console.log(`Date is ${Date.now()}, number two ${res}`);
+        }, 2000);
+      });
+    })
+    .then(() => {
+      delay(() => {
+        console.log(`Data is ${Date.now()} sum: ${one + two}`);
+      }, 3000);
+    })
+    .catch((err) => {
+      console.error(`${err}`);
+      return new Error(`${err}`);
+    });
 }
 dice();
