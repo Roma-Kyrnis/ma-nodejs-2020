@@ -1,27 +1,29 @@
 // const path = require('path');
-// const fsp = require('fs').promises;
+const fsp = require('fs').promises;
 // const zlib = require('zlib');
 // const { promisify } = require('util');
 
 // const gunzip = promisify(zlib.gunzip);
 // const gzip = promisify(zlib.gzip);
 
-// const inputDirName = 'input';
+const inputDirName = 'input';
 // const outputDirName = 'output';
 // const outputFileName = 'result.json.gz';
 
 // const inputDir // absolute path to input dir
 // const outputFile // absolute path to output file
-
-// async function getInputFileList() {
-//   try {
-//     const dir = await fsp.readdir(inputDirName);
-//   } catch (err) {
-//     console.error(`Error: ${err}`);
-//  }
-// read directory content - get list of filenames
-// create absolute path to each filename
-// }
+console.log(process.version);
+async function getInputFileList() {
+  try {
+    const files = await fsp.readdir(inputDirName);
+    // const pathToFiles;
+    console.log(files);
+  } catch (err) {
+    console.error(`Error in getInputFileList: ${err}`);
+  }
+  // read directory content - get list of filenames
+  // create absolute path to each filename
+}
 
 // async function getObjectFromFile(filePath) {
 // read file to buffer
@@ -53,10 +55,10 @@
 // write compressed buffer to file 'output/result.json.gz' (use constants)
 // }
 
-// async function start() {
-//   await getInputFileList();
-// const inputFiles = await getInputFileList();
-// const outputObject = await buildOutputObject(inputFiles);
-// await saveOutput(outputObject);
-// }
-// start().catch((err) => console.error('🐞  🤪  🐛\n', err));
+async function start() {
+  // const inputFiles =
+  await getInputFileList();
+  // const outputObject = await buildOutputObject(inputFiles);
+  // await saveOutput(outputObject);
+}
+start().catch((err) => console.error('🐞  🤪  🐛\n', err));
