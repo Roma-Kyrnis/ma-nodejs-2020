@@ -1,7 +1,7 @@
 function throwDice() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const result = Math.round(0 + Math.random() * 5);
-    if (result === 0) throw new Error('Lost dice');
+    if (result === 0) reject(new Error('Lost dice'));
     else resolve(result);
   });
 }
