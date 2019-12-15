@@ -1,8 +1,8 @@
 {
-  "name": "homework-01",
+  "name": "homework-06",
   "version": "1.0.0",
-  "description": "Project setup",
-  "main": "index.js",
+  "description": "CLI tool",
+  "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "lint": "eslint --ignore-path .gitignore . --fix"
