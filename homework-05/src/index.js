@@ -18,7 +18,7 @@ async function getInputFileList() {
   try {
     files = await fsp.readdir(inputDirName);
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    throw new Error(console.error(`Error in getInputFileList: ${err}`));
   }
   return files.map((file) => path.join(inputDir, file));
 }
@@ -64,7 +64,7 @@ async function buildOutputObject(files) {
       // eslint-disable-next-line no-await-in-loop
       object = await getObjectFromFile(file); // get content with getObjectFromFile() function
     } catch (err) {
-      return new Error(console.error(`Error in getInputFileList: ${err}`));
+      throw new Error(console.error(`Error in getInputFileList: ${err}`));
     }
     object.url = rebuildUrl(object.url); // update "url" field with rebuildUrl() function
     const name = path.basename(file.toLowerCase(), '.json.gz'); // get category name from file name
@@ -80,12 +80,12 @@ async function saveOutput(object) {
   try {
     result = await gzip(bufferJson); // compress buffer with gzip
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    throw new Error(console.error(`Error in getInputFileList: ${err}`));
   }
   try {
     await fsp.writeFile(outputFile, result, (err) => console.error(`Error in writeFile: ${err}`)); // write compressed buffer to file 'output/result.json.gz' (use constants)
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    throw new Error(console.error(`Error in getInputFileList: ${err}`));
   }
   return 0;
 }
@@ -96,17 +96,17 @@ async function start() {
   try {
     inputFiles = await getInputFileList();
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    return new Error(err);
   }
   try {
     outputObject = await buildOutputObject(inputFiles);
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    return new Error(err);
   }
   try {
     await saveOutput(outputObject);
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    return new Error(err);
   }
   return 0;
 }
