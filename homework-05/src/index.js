@@ -16,7 +16,7 @@ const outputFile = path.join(process.cwd(), outputDirName, outputFileName); // a
 async function getInputFileList() {
   let files;
   try {
-    files = await fsp.readdir(inputDirName);
+    files = await fsp.readdir(inputDir);
   } catch (err) {
     throw new Error(console.error(`Error in getInputFileList: ${err}`));
   }
