@@ -16,27 +16,45 @@ function delay(callback, ms) {
 // let two;
 
 async function dice() {
-  console.log(`Data is ${Date.now()} start`);
+  // console.log(`${Date.now()} One: ${one}`);
 
   delay(() => {
-    throwDice(() => {
-      delay(() => {
-        throwDice(() => {
-          console.log();
-        });
-      });
-    });
-  })
-    .then((res) => {
-      return res;
-    })
-    .then((res) => {
-      return res;
-    })
+    console.log(`${Date.now()} Data is  start`);
+    return throwDice();
+  }, 0)
     .then((res) => {
       console.log(res);
+      delay(() => {
+        console.log(res);
+        console.log(`Two: ${Date.now()}`);
+      }, 1300);
     })
-    .catch((err) => console.error(err));
+    .then(
+      delay(() => {
+        console.log(`Sum: ${Date.now()}`);
+      }, 1000))
+    .catch((err) => console.error(`In error: ${err}`));
+
+  // delay(() => {
+  //   throwDice(() => {
+  //     delay(() => {
+  //       throwDice(() => {
+  //         console.log();
+  //       });
+  //     });
+  //   });
+  // })
+  //   .then((res) => {
+  //     return res;
+  //   })
+  //   .then((res) => {
+  //     return res;
+  //   })
+  //   .then((res) => {
+  //     console.log(res);
+  //   })
+  //   .catch((err) => console.error(err));
+
   // throwDice().then((res) => {
   //   one = res;
   //   delay(() => {
