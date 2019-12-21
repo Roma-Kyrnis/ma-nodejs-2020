@@ -2,7 +2,7 @@ const os = require('os');
 
 let rateInput = 1000;
 let limitInput = 300;
-let colorInput = 'true';
+let colorInput = true;
 let totalMem;
 let freeMem;
 let allocatedMem;
@@ -14,8 +14,10 @@ process.argv.forEach((element) => {
   const [key, value] = element.split('=');
   if (/^RATE=\d+$/.test(element) || (key === '--rate' && /^\d+$/.test(value))) rateInput = value;
   if (/^LIMIT=\d+$/.test(element) || (key === '--limit' && /^\d+$/.test(value))) limitInput = value;
-  if (/^COLOR=(true|false)$/.test(element) || (key === '--color' && /^(true|false)$/.test(value)))
-    colorInput = value;
+  if (/^COLOR=(true|false)$/.test(element) || (key === '--color' && /^(true|false)$/.test(value))) {
+    if (value === 'true') colorInput = true;
+    else colorInput = false;
+  }
 });
 
 function cliTool(rate, limit, color) {
@@ -26,7 +28,7 @@ function cliTool(rate, limit, color) {
   delta = (allocatedMem - totalMem - freeMem).toFixed(3);
   allocatedMem = (totalMem - freeMem).toFixed(3);
 
-  if (color === 'true') {
+  if (color === true) {
     if (delta < 0) colorDelta = '\x1b[31m%s\x1b[0m';
     else colorDelta = '\x1b[32m%s\x1b[0m';
     if (Number(freeMem) < limit) colorAttention = '\x1b[31m%s\x1b[0m';
