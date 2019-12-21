@@ -28,7 +28,7 @@ function cliTool(rate, limit, color) {
   delta = (allocatedMem - totalMem - freeMem).toFixed(3);
   allocatedMem = (totalMem - freeMem).toFixed(3);
 
-  if (color === true) {
+  if (color) {
     if (delta < 0) colorDelta = '\x1b[31m%s\x1b[0m';
     else colorDelta = '\x1b[32m%s\x1b[0m';
     if (Number(freeMem) < limit) colorAttention = '\x1b[31m%s\x1b[0m';
