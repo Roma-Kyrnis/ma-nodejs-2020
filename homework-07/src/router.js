@@ -1,21 +1,11 @@
 const controller = require('./controller');
 
-let body;
-
 function badRequest(res) {
-  body.message = 'New value for minimum free memory limit is not valid number';
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 400;
-  res.write('400');
-  res.end();
-}
-
-function unauthorized(res) {
-  body.message = 'Unauthorized';
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 401;
-  res.write('401');
-  res.end();
+  res.end(
+    JSON.stringify({ message: 'New value for minimum free memory limit is not valid number' }),
+  );
 }
 
 function notFound(res) {
@@ -32,22 +22,17 @@ function methodNotAllowed(res) {
   res.end();
 }
 
-function internalServerError(res) {
-  body.message = 'Internal error occurred';
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 500;
-  res.write('500');
-  res.end();
-}
-
 module.exports = (req, res) => {
   const { url, method, queryParams } = req;
+
   const { filter = null } = queryParams;
 
   switch (url.pathname) {
     case '/limit':
       if (method === 'POST' && !filter) {
-        controller.setLimit(req.body);
+        if (/\d+/.test(req.body.limit) && req.body.limit > 0)
+          controller.setLimit(req.body.limit, res);
+        else badRequest(res);
       } else {
         methodNotAllowed(res);
       }
@@ -55,7 +40,13 @@ module.exports = (req, res) => {
     case '/metrics':
       if (method === 'GET') {
         if (filter) {
-          controller.getInfoAboutRamByFilter(req, res);
+          controller.getInfoAboutRamByFilter(
+            {
+              ...req,
+              filter,
+            },
+            res,
+          );
         } else {
           controller.getInfoAboutRam(res);
         }

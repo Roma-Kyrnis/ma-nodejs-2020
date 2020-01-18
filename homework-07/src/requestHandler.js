@@ -1,6 +1,20 @@
 const url = require('url');
 const querystring = require('querystring');
 const router = require('./router');
+const authorization = require('./authorization');
+
+function unauthorized(res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.statusCode = 401;
+  res.end(JSON.stringify({ message: 'Unauthorized' }));
+}
+
+function internalServerError(res, err) {
+  res.setHeader('Content-Type', 'application/json');
+  res.statusCode = 500;
+  res.write(JSON.stringify({ message: 'Internal error occurred' }));
+  res.end(`\n\n${err}`);
+}
 
 module.exports = async (request, response) => {
   try {
@@ -11,17 +25,20 @@ module.exports = async (request, response) => {
 
     let body = [];
 
+    if (!authorization(request)) {
+      unauthorized(response);
+      throw new Error();
+    }
+
     request
-      .on('error', (err) => {
-        console.error(err);
+      .on('error', () => {
+        throw new Error();
       })
       .on('data', (chunk) => {
         body.push(chunk);
       })
       .on('end', () => {
-        body = Buffer.concat(body).toString(); // const { key, value } =
-        // if (key === 'limit' && request.method() === 'POST' && parsedUrl.pathname === '/limit')
-        //   value;
+        body = Buffer.concat(body).toString();
 
         router(
           {
@@ -33,15 +50,7 @@ module.exports = async (request, response) => {
           response,
         );
       });
-
-    response.end('Hello World!');
   } catch (err) {
-    console.error(`Ops! ${err}`);
+    internalServerError(response, err);
   }
 };
-
-// if(request.Authorization === 'Basic') {
-
-// } else {
-//   response.
-// }
