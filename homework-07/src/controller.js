@@ -46,11 +46,10 @@ function getInfoAboutRamByFilter(req, res) {
 }
 
 function setLimit(limit = 1000, res) {
-  let body = {};
+  const body = {};
   const answer = ram.setLimit(limit);
 
   body.message = answer;
-  body = JSON.stringify(body);
 
   ok(res, body);
 }
