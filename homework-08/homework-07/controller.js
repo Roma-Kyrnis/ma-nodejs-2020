@@ -36,21 +36,21 @@ function getInfoAboutRamByFilter(req, res) {
         break;
       default:
         badRequest(res);
-        throw new Error();
+        return 0;
     }
 
     ok(res, body);
   } catch (err) {
     console.error(err);
   }
+  return 0;
 }
 
 function setLimit(limit = 1000, res) {
-  let body = {};
+  const body = {};
   const answer = ram.setLimit(limit);
 
   body.message = answer;
-  body = JSON.stringify(body);
 
   ok(res, body);
 }

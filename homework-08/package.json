@@ -1,7 +1,7 @@
 {
-  "name": "homework-07",
+  "name": "homework-08",
   "version": "1.0.0",
-  "description": "HTTP",
+  "description": "HTTP client",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

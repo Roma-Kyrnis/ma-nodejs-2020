@@ -6,14 +6,15 @@ const authorization = require('./authorization');
 function unauthorized(res) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 401;
-  res.end(JSON.stringify({ message: 'Unauthorized' }));
+  res.write(JSON.stringify({ message: 'Unauthorized' }));
+  res.end();
 }
 
 function internalServerError(res, err) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 500;
-  res.write(JSON.stringify({ message: 'Internal error occurred' }));
-  res.end(`\n\n${err}`);
+  res.write(JSON.stringify({ message: 'Internal error occurred', Error: err }));
+  res.end();
 }
 
 module.exports = async (request, response) => {
