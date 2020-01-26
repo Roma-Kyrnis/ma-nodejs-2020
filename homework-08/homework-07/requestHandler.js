@@ -3,14 +3,14 @@ const querystring = require('querystring');
 const router = require('./router');
 const authorization = require('./authorization');
 
-function unauthorized(res) {
+async function unauthorized(res) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 401;
   res.write(JSON.stringify({ message: 'Unauthorized' }));
   res.end();
 }
 
-function internalServerError(res, err) {
+async function internalServerError(res, err) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 500;
   res.write(JSON.stringify({ message: 'Internal error occurred', Error: err }));
@@ -27,11 +27,10 @@ module.exports = async (request, response) => {
     let body = [];
 
     if (!authorization(request)) {
-      unauthorized(response);
-      throw new Error();
+      await unauthorized(response);
     }
 
-    request
+    await request
       .on('error', () => {
         throw new Error();
       })
@@ -52,6 +51,6 @@ module.exports = async (request, response) => {
         );
       });
   } catch (err) {
-    internalServerError(response, err);
+    await internalServerError(response, err);
   }
 };

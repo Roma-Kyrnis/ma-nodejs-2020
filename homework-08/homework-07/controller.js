@@ -1,23 +1,25 @@
 const ram = require('./ram');
 
-function ok(res, body) {
+async function ok(res, body) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 200;
-  res.end(JSON.stringify(body));
+  res.write(JSON.stringify(body));
+  res.end();
 }
 
-function badRequest(res) {
+async function badRequest(res) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 400;
-  res.end(JSON.stringify({ message: 'Filter value is not valid' }));
+  res.write(JSON.stringify({ message: 'Filter value is not valid' }));
+  res.end();
 }
 
-function getInfoAboutRam(res) {
+async function getInfoAboutRam(res) {
   const body = ram.cliTool();
   ok(res, body);
 }
 
-function getInfoAboutRamByFilter(req, res) {
+async function getInfoAboutRamByFilter(req, res) {
   try {
     const body = {};
     const { message, ...params } = ram.cliTool();
@@ -46,7 +48,7 @@ function getInfoAboutRamByFilter(req, res) {
   return 0;
 }
 
-function setLimit(limit = 1000, res) {
+async function setLimit(limit = 1000, res) {
   const body = {};
   const answer = ram.setLimit(limit);
 

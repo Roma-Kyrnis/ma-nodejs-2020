@@ -13,7 +13,7 @@ const options = {
   },
 };
 
-const output = {};
+let output = {};
 let postDataJSON;
 
 function setLimit(limit) {
@@ -33,15 +33,15 @@ function getInfoAboutRamWithFilterActivation(filter) {
   if (filter) {
     switch (filter) {
       case 1:
-        options.path += '?filter=free';
+        options.path = '/metrics?filter=free';
 
         break;
       case 2:
-        options.path += '?filter=allocated';
+        options.path = '/metrics?filter=allocated';
 
         break;
       default:
-        options.path += '?filter=total';
+        options.path = '/metrics?filter=total';
     }
   }
 }
@@ -62,35 +62,40 @@ function getCode400ByMetrics() {
 }
 
 function getCode401() {
+  options.path = '/metrics';
+  options.method = 'GET';
   options.auth = 'Roman';
 }
 
 function getCode404() {
-  options.path = '/Error';
+  options.path = '/error';
+  options.method = '';
   options.auth = 'Roman:Test123456';
 }
 
 function getCode405() {
   options.path = '/limit';
+  options.method = '';
   options.auth = 'Roman:Test123456';
 }
 
 function getCode500() {
   options.auth = '';
+  options.path = '/metrics';
+  options.method = 'GET';
 }
 
 module.exports = function randomRequest() {
   // console.clear();
   const randomNumberErrorOrOk = Math.floor(Math.random() * 100) + 1;
 
+  output = {};
+
   if (randomNumberErrorOrOk >= 35) {
-    const randomNumberForOk = Math.floor(Math.random() * 3);
+    const randomNumberForOk = Math.floor(Math.random() * 2);
 
     switch (randomNumberForOk) {
       case 1:
-        getInfoAboutRamWithFilterActivation();
-        break;
-      case 2:
         getInfoAboutRamWithFilterActivation(Math.floor(Math.random() * 3));
         break;
       default:
