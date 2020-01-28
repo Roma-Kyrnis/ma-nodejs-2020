@@ -67,7 +67,7 @@ function getCode400ByMetrics() {
 function getCode401() {
   options.path = '/metrics';
   options.method = 'GET';
-  options.auth = 'Roman';
+  options.auth = 'Roman:Test';
 }
 
 function getCode404() {
@@ -94,38 +94,40 @@ module.exports = function randomRequest() {
 
   output = {};
 
-  if (randomNumberErrorOrOk >= 35) {
-    switch (Math.floor(Math.random() * 3)) {
-      case 1:
-        getInfoAboutRamWithFilterActivation(Math.floor(Math.random() * 3));
-        break;
-      case 2:
-        get200Code();
-        break;
-      default:
-        setLimit(Math.floor(Math.random() * 1000) + 1);
-    }
-  } else {
-    switch (Math.floor(Math.random() * 6)) {
-      case 1:
-        getCode400ByMetrics();
-        break;
-      case 2:
-        getCode401();
-        break;
-      case 3:
-        getCode404();
-        break;
-      case 4:
-        getCode405();
-        break;
-      case 5:
-        getCode500();
-        break;
-      default:
-        getCode400ByLimit();
-    }
-  }
+  // if (randomNumberErrorOrOk >= 35) {
+  //   switch (Math.floor(Math.random() * 3)) {
+  //     case 1:
+  //       getInfoAboutRamWithFilterActivation(Math.floor(Math.random() * 3));
+  //       break;
+  //     case 2:
+  //       get200Code();
+  //       break;
+  //     default:
+  //       setLimit(Math.floor(Math.random() * 1000) + 1);
+  //   }
+  // } else {
+  //   switch (Math.floor(Math.random() * 6)) {
+  //     case 1:
+  //       getCode400ByMetrics();
+  //       break;
+  //     case 2:
+  //       getCode401();
+  //       break;
+  //     case 3:
+  //       getCode404();
+  //       break;
+  //     case 4:
+  //       getCode405();
+  //       break;
+  //     case 5:
+  //       getCode500();
+  //       break;
+  //     default:
+  //       getCode400ByLimit();
+  //   }
+  // }
+
+  getCode401();
 
   output.options = options;
 

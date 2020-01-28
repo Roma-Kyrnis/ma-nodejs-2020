@@ -15,11 +15,11 @@ process.argv.forEach((element) => {
   else if (/^axios$/.test(element) && nameFunction === undefined) nameFunction = 'axios';
 });
 
-if (nameFunction === undefined) nameFunction = 'requestPromiseNative';
+if (nameFunction === undefined) nameFunction = 'axios';
 
 async function main() {
   try {
-    let result;
+    let result = {};
 
     switch (nameFunction) {
       case 'httpClient':
@@ -47,6 +47,19 @@ async function main() {
           .catch((err) => {});
         break;
       case 'axios':
+        try {
+          const response = await axios.axios(await axios.setAndGetOptions());
+
+          result.statusCode = response.status;
+
+          console.log(`Status code: ${response.status}`);
+          console.log(response.data);
+        } catch (err) {
+          console.log(err.response.status);
+          console.log(err.response.data);
+          result.statusCode = err.response.status;
+          console.log(result.statusCode);
+        }
         break;
       default:
     }
@@ -64,6 +77,7 @@ async function main() {
     lastStatusCodeError = result.statusCode;
   } catch (error) {
     console.error(`Error in main: ${error}`);
+    return 0;
   }
 
   return 0;

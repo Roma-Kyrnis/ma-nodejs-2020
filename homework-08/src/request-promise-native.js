@@ -12,6 +12,7 @@ async function getOptions() {
   if (postDataJSON) options.body = JSON.parse(postDataJSON);
   options.resolveWithFullResponse = true;
   options.json = true;
+
   return { options, url: `http://${options.hostname}:${options.port}${options.path}` };
 }
 
