@@ -3,13 +3,6 @@ const querystring = require('querystring');
 const router = require('./router');
 const authorization = require('./authorization');
 
-async function unauthorized(res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 401;
-  res.write(JSON.stringify({ message: 'Unauthorized' }));
-  res.end();
-}
-
 async function internalServerError(res, err) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 500;
@@ -26,8 +19,8 @@ module.exports = async (request, response) => {
 
     let body = [];
 
-    if (!authorization(request)) {
-      await unauthorized(response);
+    if (!authorization(request, response)) {
+      return 1;
     }
 
     await request

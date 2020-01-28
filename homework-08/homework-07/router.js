@@ -68,6 +68,17 @@ module.exports = async (req, res) => {
         await methodNotAllowed(res);
       }
       break;
+    case '/get200Code':
+      if (method === 'GET') {
+        if (Object.keys(queryParams).length === 0) {
+          await controller.get200Code(res);
+        } else {
+          await internalServerError(res);
+        }
+      } else {
+        await methodNotAllowed(res);
+      }
+      break;
     default:
       await notFound(res);
   }

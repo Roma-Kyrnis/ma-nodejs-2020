@@ -14,6 +14,10 @@ async function badRequest(res) {
   res.end();
 }
 
+async function get200Code(res) {
+  ok(res, { message: 'OK' });
+}
+
 async function getInfoAboutRam(res) {
   const body = ram.cliTool();
   ok(res, body);
@@ -58,6 +62,7 @@ async function setLimit(limit = 1000, res) {
 }
 
 module.exports = {
+  get200Code,
   getInfoAboutRam,
   getInfoAboutRamByFilter,
   setLimit,

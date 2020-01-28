@@ -1,0 +1,1 @@
+const randomRequest = require('./requests');

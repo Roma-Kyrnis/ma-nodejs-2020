@@ -1,58 +1,55 @@
-const http = require('http');
-const randomRequest = require('./requests');
+const httpClient = require('./httpClient');
+const requestPromiseNative = require('./request-promise-native');
+const axios = require('./axios');
 
 let errorCounting = 0;
 let ms = 100;
 let lastStatusCodeError;
 const limit = 40;
+let nameFunction;
 
-function httpRequest() {
-  return new Promise((resolve, reject) => {
-    try {
-      const request = randomRequest();
+process.argv.forEach((element) => {
+  if (/^httpClient$/.test(element) && nameFunction === undefined) nameFunction = 'httpClient';
+  else if (/^requestPromiseNative$/.test(element) && nameFunction === undefined)
+    nameFunction = 'requestPromiseNative';
+  else if (/^axios$/.test(element) && nameFunction === undefined) nameFunction = 'axios';
+});
 
-      const req = http.request(request.options, (res) => {
-        // console.log(`Options: ${JSON.stringify(request.options)}`);
-
-        console.log(`\nStatusCode: ${res.statusCode}`);
-
-        res.setEncoding('utf8');
-
-        let rawData = '';
-
-        res.on('data', (chunk) => {
-          rawData += chunk;
-        });
-        res.on('end', () => {
-          res.data = rawData;
-          resolve(res);
-        });
-        res.on('error', (err) => {
-          console.error(`problem with request: ${err.message}`);
-          reject(err);
-        });
-      });
-      if (request.postDataJSON !== undefined) req.write(request.postDataJSON);
-      req.end();
-    } catch (err) {
-      console.error(`Error in httpRequest: ${err}`);
-    }
-  });
-}
+if (nameFunction === undefined) nameFunction = 'requestPromiseNative';
 
 async function main() {
   try {
     let result;
-    await httpRequest()
-      .then((data) => {
-        result = data;
-      })
-      .catch((err) => {
-        console.error(`Error with promise: ${err}`);
-      });
 
-    if (result.data === '') console.log('No data!');
-    else console.log(JSON.parse(result.data));
+    switch (nameFunction) {
+      case 'httpClient':
+        await httpClient()
+          .then((response) => {
+            result = response;
+            if (result.data === '') console.log('No data!');
+            else console.log(JSON.parse(result.data));
+          })
+          .catch((err) => {
+            console.error(`Error with promise: ${err}`);
+          });
+        break;
+      case 'requestPromiseNative':
+        // eslint-disable-next-line no-case-declarations
+        const objectOptions = await requestPromiseNative.getOptions();
+
+        await requestPromiseNative
+          .rpn(objectOptions.url, objectOptions.options, (err, response, body) => {
+            result = response;
+            console.log(`Status code: ${response.statusCode}`);
+            if (response.body === undefined) console.log('No data!');
+            else console.log(body);
+          })
+          .catch((err) => {});
+        break;
+      case 'axios':
+        break;
+      default:
+    }
 
     if (result.statusCode >= 400) {
       if (result.statusCode === lastStatusCodeError) ms *= 2;
@@ -60,12 +57,11 @@ async function main() {
       errorCounting += 1;
       if (errorCounting >= limit) return 1;
       setTimeout(() => {
-        // console.log(`setImmediate ${ms}`);
         main();
       }, ms);
     }
 
-    lastStatusError = result.statusCode;
+    lastStatusCodeError = result.statusCode;
   } catch (error) {
     console.error(`Error in main: ${error}`);
   }

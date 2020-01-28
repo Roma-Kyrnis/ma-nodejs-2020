@@ -14,15 +14,19 @@ const options = {
 };
 
 let output = {};
-let postDataJSON;
 
 function setLimit(limit) {
   options.path = '/limit';
   options.method = 'POST';
   options.auth = 'Roman:Test123456';
   postData.limit = limit;
-  postDataJSON = JSON.stringify(postData);
-  output.postDataJSON = postDataJSON;
+  output.postDataJSON = JSON.stringify(postData);
+}
+
+function get200Code() {
+  options.path = '/get200Code';
+  options.method = 'GET';
+  options.auth = 'Roman:Test123456';
 }
 
 function getInfoAboutRamWithFilterActivation(filter) {
@@ -51,8 +55,7 @@ function getCode400ByLimit() {
   options.method = 'POST';
   options.auth = 'Roman:Test123456';
   postData.limit = 'error';
-  postDataJSON = JSON.stringify(postData);
-  output.postDataJSON = postDataJSON;
+  output.postDataJSON = JSON.stringify(postData);
 }
 
 function getCode400ByMetrics() {
@@ -69,7 +72,7 @@ function getCode401() {
 
 function getCode404() {
   options.path = '/error';
-  options.method = '';
+  options.method = 'GET';
   options.auth = 'Roman:Test123456';
 }
 
@@ -92,19 +95,18 @@ module.exports = function randomRequest() {
   output = {};
 
   if (randomNumberErrorOrOk >= 35) {
-    const randomNumberForOk = Math.floor(Math.random() * 2);
-
-    switch (randomNumberForOk) {
+    switch (Math.floor(Math.random() * 3)) {
       case 1:
         getInfoAboutRamWithFilterActivation(Math.floor(Math.random() * 3));
+        break;
+      case 2:
+        get200Code();
         break;
       default:
         setLimit(Math.floor(Math.random() * 1000) + 1);
     }
   } else {
-    const randomNumberForErrorCode = Math.floor(Math.random() * 6);
-
-    switch (randomNumberForErrorCode) {
+    switch (Math.floor(Math.random() * 6)) {
       case 1:
         getCode400ByMetrics();
         break;
