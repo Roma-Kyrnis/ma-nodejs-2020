@@ -2,6 +2,7 @@ const httpClient = require('./httpClient');
 const requestPromiseNative = require('./request-promise-native');
 const axios = require('./axios');
 
+const valuesOfFunction = ['httpClient', 'requestPromiseNative', 'axios'];
 let errorCounting = 0;
 let ms = 100;
 let lastStatusCodeError;
@@ -13,7 +14,7 @@ process.argv.forEach((element) => {
   else if (/^requestPromiseNative$/.test(element) && nameFunction === undefined)
     nameFunction = 'requestPromiseNative';
   else if (/^axios$/.test(element) && nameFunction === undefined) nameFunction = 'axios';
-});
+}, valuesOfFunction);
 
 if (nameFunction === undefined) nameFunction = 'axios';
 
@@ -23,6 +24,7 @@ async function main() {
 
     switch (nameFunction) {
       case 'httpClient':
+        console.log('httpClient');
         await httpClient()
           .then((response) => {
             result = response;
@@ -34,6 +36,7 @@ async function main() {
           });
         break;
       case 'requestPromiseNative':
+        console.log('rpn');
         // eslint-disable-next-line no-case-declarations
         const objectOptions = await requestPromiseNative.getOptions();
 
@@ -44,9 +47,10 @@ async function main() {
             if (response.body === undefined) console.log('No data!');
             else console.log(body);
           })
-          .catch((err) => {});
+          .catch(() => {});
         break;
       case 'axios':
+        console.log('axios');
         try {
           const response = await axios.axios(await axios.setAndGetOptions());
 
@@ -55,10 +59,9 @@ async function main() {
           console.log(`Status code: ${response.status}`);
           console.log(response.data);
         } catch (err) {
-          console.log(err.response.status);
+          console.log(`Status code error: ${err.response.status}`);
           console.log(err.response.data);
           result.statusCode = err.response.status;
-          console.log(result.statusCode);
         }
         break;
       default:

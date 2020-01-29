@@ -8,33 +8,17 @@ async function setAndGetOptions() {
 
   if (postDataJSON) options.data = JSON.parse(postDataJSON);
 
-  const partsOfAuth = options.auth.split(/:/);
-  options.auth = { username: partsOfAuth[0], password: partsOfAuth[1] };
-
-  delete options.hostname;
-  delete options.port;
-  delete options.path;
+  if (options.auth) {
+    const partsOfAuth = options.auth.split(/:/);
+    options.auth = { username: partsOfAuth[0], password: partsOfAuth[1] };
+  }
 
   options.headers = {
     'Content-type': 'application/json',
   };
 
-  // console.log(options);
-
   return options;
 }
-
-// async function main() {
-//   try {
-//     const response = await axios(await setAndGetOptions());
-
-//     console.log(response.status);
-//     console.log(response.data);
-//   } catch (err) {
-//     console.log(err.response.status);
-//     console.log(err.response.data);
-//   }
-// }
 
 module.exports = {
   axios,
