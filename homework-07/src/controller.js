@@ -3,13 +3,15 @@ const ram = require('./ram');
 function ok(res, body) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 200;
-  res.end(JSON.stringify(body));
+  res.write(JSON.stringify(body));
+  res.end();
 }
 
 function badRequest(res) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 400;
-  res.end(JSON.stringify({ message: 'Filter value is not valid' }));
+  res.write(JSON.stringify({ message: 'Filter value is not valid' }));
+  res.end();
 }
 
 function getInfoAboutRam(res) {
@@ -36,13 +38,14 @@ function getInfoAboutRamByFilter(req, res) {
         break;
       default:
         badRequest(res);
-        throw new Error();
+        return 0;
     }
 
     ok(res, body);
   } catch (err) {
     console.error(err);
   }
+  return 0;
 }
 
 function setLimit(limit = 1000, res) {
