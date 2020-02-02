@@ -7,16 +7,25 @@ function ok(res, body) {
   res.end();
 }
 
-function badRequest(res) {
+function badRequest(res, message) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 400;
-  res.write(JSON.stringify({ message: 'Filter value is not valid' }));
+  res.write(JSON.stringify(message));
   res.end();
 }
 
-function getInfoAboutRam(res) {
-  const body = ram.cliTool();
-  ok(res, body);
+function methodNotAllowed(res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.statusCode = 405;
+  res.write(JSON.stringify({ message: 'Method not allowed!' }));
+  res.end();
+}
+
+function internalServerError(res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.statusCode = 500;
+  res.write(JSON.stringify({ message: 'Internal error occurred' }));
+  res.end();
 }
 
 function getInfoAboutRamByFilter(req, res) {
@@ -37,7 +46,7 @@ function getInfoAboutRamByFilter(req, res) {
         body.allocated = params.allocated;
         break;
       default:
-        badRequest(res);
+        badRequest(res, { message: 'Filter value is not valid' });
         return 0;
     }
 
@@ -48,11 +57,46 @@ function getInfoAboutRamByFilter(req, res) {
   return 0;
 }
 
-function setLimit(limit = 1000, res) {
-  const body = {};
-  const answer = ram.setLimit(limit);
+function getInfoAboutRam(req, res) {
+  const body = ram.cliTool();
 
-  body.message = answer;
+  const { method, queryParams } = req;
+
+  const { filter = null, ...other } = queryParams;
+
+  if (method === 'GET') {
+    if (Object.keys(other).length !== 0) internalServerError(res);
+    if (filter) {
+      getInfoAboutRamByFilter(
+        {
+          ...req,
+          filter,
+        },
+        res,
+      );
+    } else ok(res, body);
+  } else methodNotAllowed(res);
+}
+
+function setLimit(req, res) {
+  const body = {};
+
+  const { method, queryParams } = req;
+
+  if (method === 'POST') {
+    if (Object.keys(queryParams).length === 0) {
+      if (/\d+/.test(req.body.limit) && req.body.limit > 0) {
+        const answer = ram.setLimit(req.body.limit);
+
+        body.message = answer;
+      } else if (req.body.limit === undefined)
+        badRequest(res, { message: 'Not find limit in body!' });
+      else
+        badRequest(res, { message: 'New value for minimum free memory limit is not valid number' });
+    } else internalServerError(res);
+  } else {
+    methodNotAllowed(res);
+  }
 
   ok(res, body);
 }
