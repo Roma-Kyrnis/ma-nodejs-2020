@@ -1,7 +1,7 @@
 const axios = require('axios');
 const randomRequest = require('./requests');
 
-async function setAndGetOptions() {
+function setAndGetOptions() {
   const { options, postDataJSON = null } = randomRequest();
 
   options.url = `http://${options.hostname}:${options.port}${options.path}`;

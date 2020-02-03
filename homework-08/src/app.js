@@ -1,6 +1,6 @@
 const httpClient = require('./httpClient');
-const requestPromiseNative = require('./request-promise-native');
-const axios = require('./axios');
+const clientRPN = require('./clientRPN');
+const clientAxios = require('./clientAxios');
 
 const valuesOfFunction = ['httpClient', 'requestPromiseNative', 'axios'];
 let errorCounting = 0;
@@ -16,7 +16,7 @@ process.argv.forEach((element) => {
   else if (/^axios$/.test(element) && nameFunction === undefined) nameFunction = 'axios';
 }, valuesOfFunction);
 
-if (nameFunction === undefined) nameFunction = 'axios';
+if (nameFunction === undefined) nameFunction = 'requestPromiseNative';
 
 async function main() {
   try {
@@ -38,9 +38,9 @@ async function main() {
       case 'requestPromiseNative':
         console.log('rpn');
         // eslint-disable-next-line no-case-declarations
-        const objectOptions = await requestPromiseNative.getOptions();
+        const objectOptions = clientRPN.getOptions();
 
-        await requestPromiseNative
+        await clientRPN
           .rpn(objectOptions.url, objectOptions.options, (err, response, body) => {
             result = response;
             console.log(`Status code: ${response.statusCode}`);
@@ -52,7 +52,7 @@ async function main() {
       case 'axios':
         console.log('axios');
         try {
-          const response = await axios.axios(await axios.setAndGetOptions());
+          const response = await clientAxios.axios(clientAxios.setAndGetOptions());
 
           result.statusCode = response.status;
 

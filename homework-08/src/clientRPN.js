@@ -1,7 +1,7 @@
 const rpn = require('request-promise-native');
 const randomRequest = require('./requests');
 
-async function getOptions() {
+function getOptions() {
   const { options, postDataJSON = null } = randomRequest();
 
   if (options.auth !== '')
