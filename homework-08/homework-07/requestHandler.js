@@ -46,4 +46,5 @@ module.exports = async (request, response) => {
   } catch (err) {
     await internalServerError(response, err);
   }
+  return 0;
 };

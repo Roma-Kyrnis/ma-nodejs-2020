@@ -18,66 +18,89 @@ process.argv.forEach((element) => {
 
 if (nameFunction === undefined) nameFunction = 'requestPromiseNative';
 
+async function retry(result, func) {
+  if (result.statusCode === lastStatusCodeError) ms *= 2;
+  else ms = 100;
+  errorCounting += 1;
+  if (errorCounting >= limit) return 1;
+  lastStatusCodeError = result.statusCode;
+  setTimeout(() => {
+    func();
+  }, ms);
+
+  return 0;
+}
+
+async function fHttpClient() {
+  let result = {};
+
+  console.log('httpClient');
+  await httpClient()
+    .then((response) => {
+      result = response;
+      if (result.data === '') console.log('No data!');
+      else console.log(JSON.parse(result.data));
+      if (result.statusCode < 400) lastStatusCodeError = result.statusCode;
+      if (result.statusCode >= 400) retry(result, fHttpClient);
+    })
+    .catch((err) => {
+      console.error(`Error with promise: ${err}`);
+    });
+}
+
+async function fRequestPromiseNative() {
+  let result = {};
+
+  console.log('rpn');
+  const objectOptions = clientRPN.getOptions();
+
+  await clientRPN
+    .rpn(objectOptions.url, objectOptions.options, (err, response, body) => {
+      result = response;
+      console.log(`Status code: ${response.statusCode}`);
+      if (response.body === undefined) console.log('No data!');
+      else console.log(body);
+      if (result.statusCode < 400) lastStatusCodeError = result.statusCode;
+    })
+    .catch(() => {
+      retry(result, fRequestPromiseNative);
+    });
+}
+
+async function fAxios() {
+  const result = {};
+
+  console.log('axios');
+  try {
+    const response = await clientAxios.axios(clientAxios.setAndGetOptions());
+
+    result.statusCode = response.status;
+
+    console.log(`Status code: ${response.status}`);
+    console.log(response.data);
+    lastStatusCodeError = result.statusCode;
+  } catch (err) {
+    console.log(`Status code error: ${err.response.status}`);
+    console.log(err.response.data);
+    result.statusCode = err.response.status;
+    retry(result, fAxios);
+  }
+}
+
 async function main() {
   try {
-    let result = {};
-
     switch (nameFunction) {
       case 'httpClient':
-        console.log('httpClient');
-        await httpClient()
-          .then((response) => {
-            result = response;
-            if (result.data === '') console.log('No data!');
-            else console.log(JSON.parse(result.data));
-          })
-          .catch((err) => {
-            console.error(`Error with promise: ${err}`);
-          });
+        fHttpClient();
         break;
       case 'requestPromiseNative':
-        console.log('rpn');
-        // eslint-disable-next-line no-case-declarations
-        const objectOptions = clientRPN.getOptions();
-
-        await clientRPN
-          .rpn(objectOptions.url, objectOptions.options, (err, response, body) => {
-            result = response;
-            console.log(`Status code: ${response.statusCode}`);
-            if (response.body === undefined) console.log('No data!');
-            else console.log(body);
-          })
-          .catch(() => {});
+        fRequestPromiseNative();
         break;
       case 'axios':
-        console.log('axios');
-        try {
-          const response = await clientAxios.axios(clientAxios.setAndGetOptions());
-
-          result.statusCode = response.status;
-
-          console.log(`Status code: ${response.status}`);
-          console.log(response.data);
-        } catch (err) {
-          console.log(`Status code error: ${err.response.status}`);
-          console.log(err.response.data);
-          result.statusCode = err.response.status;
-        }
+        fAxios();
         break;
       default:
     }
-
-    if (result.statusCode >= 400) {
-      if (result.statusCode === lastStatusCodeError) ms *= 2;
-      else ms = 100;
-      errorCounting += 1;
-      if (errorCounting >= limit) return 1;
-      setTimeout(() => {
-        main();
-      }, ms);
-    }
-
-    lastStatusCodeError = result.statusCode;
   } catch (error) {
     console.error(`Error in main: ${error}`);
     return 0;

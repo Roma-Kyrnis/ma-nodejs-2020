@@ -15,4 +15,5 @@ module.exports = (req, res) => {
 
   if (/^Basic /.test(header) && username === 'Roman' && password === 'Test123456') return 1;
   unauthorized(res);
+  return 0;
 };
