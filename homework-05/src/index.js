@@ -18,7 +18,8 @@ async function getInputFileList() {
   try {
     files = await fsp.readdir(inputDir);
   } catch (err) {
-    throw new Error(console.error(`Error in getInputFileList: ${err}`));
+    console.error(`Error in getInputFileList: ${err}`);
+    throw new Error();
   }
   return files.map((file) => path.join(inputDir, file));
 }
@@ -29,12 +30,14 @@ async function getObjectFromFile(filePath) {
   try {
     compressedBuffer = await fsp.readFile(filePath); // read file to buffer
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    console.error(`Error with compressedBuffer: ${err}`);
+    throw new Error();
   }
   try {
     jsonBuffer = await gunzip(compressedBuffer); // decompress buffer with gunzip
   } catch (err) {
-    return new Error(console.error(`Error in getInputFileList: ${err}`));
+    console.error(`Error with InputFiles to buffer: ${err}`);
+    throw new Error();
   }
   const json = jsonBuffer.toString(); // convert buffer to JSON string
   const object = JSON.parse(json); // parse JSON string to object
@@ -64,7 +67,8 @@ async function buildOutputObject(files) {
       // eslint-disable-next-line no-await-in-loop
       object = await getObjectFromFile(file); // get content with getObjectFromFile() function
     } catch (err) {
-      throw new Error(console.error(`Error in getInputFileList: ${err}`));
+      console.error(`Error in getInputFileList: ${err}`);
+      throw new Error();
     }
     object.url = rebuildUrl(object.url); // update "url" field with rebuildUrl() function
     const name = path.basename(file.toLowerCase(), '.json.gz'); // get category name from file name
@@ -80,12 +84,14 @@ async function saveOutput(object) {
   try {
     result = await gzip(bufferJson); // compress buffer with gzip
   } catch (err) {
-    throw new Error(console.error(`Error in getInputFileList: ${err}`));
+    console.error(`Error in gzip: ${err}`);
+    throw new Error();
   }
   try {
     await fsp.writeFile(outputFile, result, (err) => console.error(`Error in writeFile: ${err}`)); // write compressed buffer to file 'output/result.json.gz' (use constants)
   } catch (err) {
-    throw new Error(console.error(`Error in getInputFileList: ${err}`));
+    console.error(`Error in fsp.writeFile: ${err}`);
+    throw new Error();
   }
   return 0;
 }
@@ -96,17 +102,20 @@ async function start() {
   try {
     inputFiles = await getInputFileList();
   } catch (err) {
-    return new Error(err);
+    console.error(`Error in InputFiles: ${err}`);
+    throw new Error();
   }
   try {
     outputObject = await buildOutputObject(inputFiles);
   } catch (err) {
-    return new Error(err);
+    console.error(`Error in outputObject: ${err}`);
+    throw new Error();
   }
   try {
     await saveOutput(outputObject);
   } catch (err) {
-    return new Error(err);
+    console.error(`Error in saveOutput: ${err}`);
+    throw new Error();
   }
   return 0;
 }
