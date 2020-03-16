@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "airbnb",
+    "plugin:node/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-console":"off",
+    "no-plusplus": [2, { "allowForLoopAfterthoughts": true }]
+  }
+}
