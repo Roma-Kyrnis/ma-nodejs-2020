@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "NODE_ENV=development node src/index.js",
-    "test": "",
+    "test": "node src/test.js",
     "lint": "eslint --ignore-path .gitignore . --fix",
     "migrate": "NODE_ENV=development ./node_modules/.bin/knex --knexfile=./src/config/knexfile.js --env=development migrate:latest --verbose"
   },
@@ -19,7 +19,8 @@
     "knex": "^0.20.9",
     "node-telegram-bot-api": "^0.40.0",
     "pg": "^7.18.1",
-    "telegraf": "^3.36.0"
+    "telegraf": "^3.36.0",
+    "telegraf-flow": "^8.3.0"
   },
   "author": "Roman",
   "license": "ISC",

@@ -1,11 +1,29 @@
 require('dotenv').config();
 
-const Telegraf = require('telegraf')
+const Telegraf = require('telegraf');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.start((ctx) => ctx.reply('Welcome!'));
-bot.help((ctx) => ctx.reply('Send me a sticker'));
-bot.on('sticker', (ctx) => ctx.reply('👍'));
-bot.hears('hi', (ctx) => ctx.reply('Hey there'));
+const { addStudentToGroup } = require('./functions.js');
+const auth = require('./auth');
+
+bot.catch((err, ctx) => {
+  console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
+});
+
+bot.start(async (ctx, next) => {
+
+  ctx.reply("Привет! Введи код для подключения к группе.");
+
+  await auth(ctx);
+
+  await addStudent(ctx);
+
+  await next();
+});
+
+bot.on('text', (ctx, next) => {
+  console.log(ctx.message);
+});
+
 bot.launch();
