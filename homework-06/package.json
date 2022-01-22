@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Roman-Kirnos/ma-nodejs-2020#readme",
   "dependencies": {
-    "nanoid": "^2.1.7"
+    "nanoid": "^3.1.31"
   },
   "devDependencies": {
     "eslint": "^6.6.0",
